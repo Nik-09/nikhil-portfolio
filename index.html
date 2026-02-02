@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikhil Agarwal - Full Stack Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FFF8F0;
+            --cream-dark: #F5EBE0;
+            --warm-brown: #8B7355;
+            --deep-brown: #5C4D42;
+            --accent-gold: #D4AF37;
+            --text-primary: #2C2416;
+            --text-secondary: #6B5D52;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Progress Indicator */
+        .journey-progress {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--cream-dark);
+            border: 2px solid var(--warm-brown);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            transform: scale(1.3);
+        }
+
+        .progress-dot::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .progress-dot:hover::before,
+        .progress-dot.active::before {
+            opacity: 1;
+        }
+
+        /* Header */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-50px, 50px) rotate(180deg); }
+        }
+
+        .profile-image-container {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--accent-gold);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            position: relative;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .profile-image-container::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--accent-gold), var(--warm-brown), var(--accent-gold));
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--warm-brown) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .hero-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.8s backwards;
+        }
+
+        .contact-link {
+            color: var(--warm-brown);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border: 1.5px solid var(--warm-brown);
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+
+        .contact-link:hover {
+            background: var(--warm-brown);
+            color: var(--cream);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(139, 115, 85, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Sections */
+        .section {
+            min-height: 100vh;
+            padding: 120px 80px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: var(--text-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gold);
+        }
+
+        /* Experience */
+        .experience-grid {
+            display: grid;
+            gap: 48px;
+        }
+
+        .experience-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid var(--accent-gold);
+            transition: all 0.4s;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .experience-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .experience-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .company {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .role {
+            font-size: 18px;
+            color: var(--warm-brown);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .duration {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .experience-details {
+            list-style: none;
+            display: grid;
+            gap: 12px;
+        }
+
+        .experience-details li {
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .experience-details li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.4s;
+        }
+
+        .skill-category.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skill-category h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--warm-brown);
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background: var(--cream-dark);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(139, 115, 85, 0.1);
+        }
+
+        /* Education & Leadership */
+        .info-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .info-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.6;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--warm-brown), transparent);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .journey-progress {
+                left: 20px;
+                gap: 16px;
+            }
+
+            .progress-dot::before {
+                display: none;
+            }
+
+            .hero {
+                padding: 60px 24px;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .section {
+                padding: 80px 24px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Journey Progress Indicator -->
+    <div class="journey-progress">
+        <div class="progress-dot active" data-section="hero" data-label="INTRO"></div>
+        <div class="progress-dot" data-section="experience" data-label="EXPERIENCE"></div>
+        <div class="progress-dot" data-section="skills" data-label="SKILLS"></div>
+        <div class="progress-dot" data-section="education" data-label="EDUCATION"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="profile-image-container">
+            <img src="nikhil.jpeg" alt="Nikhil Agarwal" class="profile-image">
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">Nikhil Agarwal</h1>
+            <p class="hero-subtitle">Full Stack Developer & Engineering Lead</p>
+            <p class="hero-description">
+                Building scalable cloud-native applications with 2+ years of experience.
+                Specializing in Python, Angular, and System Design with a passion for
+                creating intelligent, automated solutions.
+            </p>
+            <div class="contact-links">
+                <a href="mailto:nikhil.agarwal.2019@gmail.com" class="contact-link">Email</a>
+                <a href="https://github.com/nik-09" target="_blank" class="contact-link">GitHub</a>
+                <a href="https://linkedin.com/in/nik-09" target="_blank" class="contact-link">LinkedIn</a>
+                <a href="tel:+918697230249" class="contact-link">+91 8697230249</a>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section" id="experience">
+        <div class="section-content">
+            <h2 class="section-title">Professional Journey</h2>
+
+            <div class="experience-grid">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div>
+                            <h3 class="company">Oppia Foundation</h3>
+                            <p class="role">Full-Stack Engineer & Team Lead (CORE Team)</p>
+                        </div>
+                        <p class="duration">July 2023 – Present</p>
+                    </div>
+                    <ul class="experience-details">
+                        <li>Lead the CORE development team, defining quarterly goals and ensuring project delivery</li>
+                        <li>Built scalable admin interface for voiceover system using Python and Angular</li>
+                        <li>Engineered automated pipeline with Azure Text-to-Speech, achieving 100% content coverage</li>
+                        <li>Led large-scale data migration using Apache Beam for enhanced global accessibility</li>
+                        <li>Manage GCP deployments ensuring 24/7 system reliability</li>
+                    </ul>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div>
+                            <h3 class="company">Amazon</h3>
+                            <p class="role">Support Engineer Intern</p>
+                        </div>
+                        <p class="duration">January 2023 - June 2023</p>
+                    </div>
+                    <ul class="experience-details">
+                        <li>Designed API validation and backend architecture for Alexa Mobile Accessories</li>
+                        <li>Enhanced test suite by removing deprecated methods and optimizing test logic</li>
+                        <li>Developed hardware-aware stress tests for system stability</li>
+                        <li>Automated key test cases, increasing testing efficiency across the pipeline</li>
+                        <li>Established streamlined framework for quality assurance processes</li>
+                    </ul>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <div>
+                            <h3 class="company">Google Summer of Code</h3>
+                            <p class="role">Student Developer</p>
+                        </div>
+                        <p class="duration">2021 - 2022</p>
+                    </div>
+                    <ul class="experience-details">
+                        <li><strong>2022:</strong> Developed recommendation system analyzing test performance using Python and Angular</li>
+                        <li>Created comprehensive unit tests and E2E tests for system verification</li>
+                        <li><strong>2021:</strong> Built schema validation system reducing backend errors</li>
+                        <li>Implemented argument normalization and schema matching error handling</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+        <div class="section-content">
+            <h2 class="section-title">Technical Expertise</h2>
+
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Languages</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">NoSQL</span>
+                        <span class="skill-tag">Bash</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Apache Beam</span>
+                        <span class="skill-tag">Django</span>
+                        <span class="skill-tag">Angular</span>
+                        <span class="skill-tag">React</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Tools & Cloud</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">GCP</span>
+                        <span class="skill-tag">Dataflow</span>
+                        <span class="skill-tag">BigQuery</span>
+                        <span class="skill-tag">Azure Cognitive Services</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">CI/CD</span>
+                        <span class="skill-tag">Git/GitHub</span>
+                        <span class="skill-tag">REST APIs</span>
+                        <span class="skill-tag">OpenAI/Gemini APIs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education & Leadership Section -->
+    <section class="section" id="education">
+        <div class="section-content">
+            <h2 class="section-title">Education & Leadership</h2>
+
+            <div class="info-card">
+                <h3>Narula Institute of Technology</h3>
+                <p><strong>Bachelor of Technology in Computer Science & Engineering</strong></p>
+                <p>2019 – 2023 | GPA: 8.9/10</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Leadership & Mentorship</h3>
+                <p>
+                    <strong>Google Summer of Code Org Admin (2025)</strong> - Leading program coordination
+                    and supporting mentors for successful project delivery.
+                </p>
+                <p style="margin-top: 12px;">
+                    <strong>GSoC Mentor (2023, 2024)</strong> - Guided student contributors through
+                    complex technical challenges and project milestones.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scroll and progress tracking
+        const sections = document.querySelectorAll('.section, .hero');
+        const progressDots = document.querySelectorAll('.progress-dot');
+
+        // Intersection Observer for sections
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px'
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.id;
+                    progressDots.forEach(dot => {
+                        dot.classList.remove('active');
+                        if (dot.dataset.section === sectionId) {
+                            dot.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // Click navigation
+        progressDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const targetSection = document.getElementById(dot.dataset.section);
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Animate cards on scroll
+        const animatedElements = document.querySelectorAll('.experience-card, .skill-category, .info-card');
+
+        const elementObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(element => {
+            elementObserver.observe(element);
+        });
+
+        // Hide scroll indicator on scroll
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '0.6';
+            }
+        });
+    </script>
+</body>
+</html>
